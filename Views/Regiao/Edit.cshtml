@@ -1,0 +1,61 @@
+﻿@model GEPV.Domain.Entities.Regiao
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style type="text/css">
+    #map {
+        width: 100%;
+        height: 400px;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <button id="restore-view" class="btn btn-secondary btn-sm" onclick="window.location.href = '';"><i class="fa fa-close"></i> Redefinir a região</button>
+            <div id="map" class="map"></div>
+            <ul class="mt-3">
+                <li>
+                    Segure tecla <span class="badge badge-dark">Shift</span> e botão esquerdo do mouse para demarcar o raio da região
+                </li>
+                <li>
+                    Use scroll do mouse para zoom
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="limit_1_feature" value="1" />
+                @Html.HiddenFor(m => m.Feature, htmlAttributes: new { @id = "data" })
+                <div class="form-horizontal">
+                    <h3 class="display-5 text-primary">Região</h3>
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.Id)
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Descricao, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Descricao, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Descricao, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Salvar" class="btn btn-success my-3" />
+                            @Html.ActionLink("Voltar", "Index", new { }, new { @class = "btn btn-info" })
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+
+    </div>
+</div>

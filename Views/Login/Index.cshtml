@@ -1,0 +1,38 @@
+﻿@model GEPV.Domain.DTO.LoginDto
+
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>GE Representações - Pós Venda</title>
+
+    @await Html.PartialAsync("~/Views/js-css-public.cshtml")
+
+</head>
+<body class="text-center d-flex justify-content-center" style="height: 100vh">
+    <div class="m-auto" id="loginbox">
+        @if (ViewBag.LoginFailed == 1) { 
+            <div class="alert alert-warning">Login incorreto!</div>
+        }
+        @using (Html.BeginForm("Login", "Login", new { returnUrl = Context.Request.Query["ReturnUrl"] }, FormMethod.Post, true, new { @class = "form-signin" }))
+        {
+            <h1 class="h3 mb-3 font-weight-normal"><img src="~/Content/img/logo.png" style="width: 180px" alt="GE Representações" /></h1>
+            <span class="text-danger">@Html.ValidationMessageFor(x => x.Usuario)</span>
+            <span class="text-danger">@Html.ValidationMessageFor(x => x.Senha)</span>
+            <label for="Usuario">Usuário</label>
+            <input type="text" id="Usuario" name="Usuario" class="form-control" placeholder="Usuário" required>
+            <label for="Senha">Senha</label>
+            <input type="password" id="Senha" name="Senha" class="form-control" placeholder="Senha" required>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
+        }
+
+    </div>
+</body>
+
+</html>

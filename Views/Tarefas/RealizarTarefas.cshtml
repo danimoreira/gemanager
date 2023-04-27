@@ -1,0 +1,80 @@
+﻿
+<div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">        
+        <div class="modal-header">
+            <h4 class="modal-title">Realizar Contato</h4>
+            <a class="close" data-dismiss="modal" onclick="tarefas.ReloadTarefas()" ><span aria-hidden="true">×</span><span class="sr-only">Close</span></a>
+        </div>            
+
+        <div class="modal-body">
+            <div class="container-fluid">
+                <form action="@Url.Action("Salvar", "Tarefas")" method="post">
+                    <input type="hidden" name="IdVendedor" value="@ViewBag.IdVendedor" />
+                   
+                    <input type="hidden" name="Id" value="@(ViewBag.HistoricoAtual != null ? ViewBag.HistoricoAtual.Id : "")" />
+
+                    <div class="row">
+
+                        @if((bool)ViewBag.TemFilial)
+                        {
+                            <div class="col-12 form-group">
+                                <label class="control-label">CNPJ:</label>
+                                @Html.DropDownList("IdCliente", (SelectList)ViewBag.CnpjsCliente, htmlAttributes: new { @class = "form-control" })
+                            </div>
+                        }
+                        else {
+                            <input type="hidden" name="IdCliente" value="@ViewBag.IdCliente" />
+                        }
+                        
+
+                        <div class="col-12 form-group">
+                            <label class="control-label">Fornecedor:</label>
+                            @Html.DropDownList("IdFornecedor", (SelectList)ViewBag.ListaFornecedores, htmlAttributes: new { @class = "form-control", onchange="tarefas.AlterarFornecedor(this);" })
+                        </div>
+
+                        <div class="col-12 form-group">
+                            <label class="control-label">Data Contato:</label>
+                            <input type="datetime" class="form-control " id="DataContato" disabled name="DataContato" value="@DateTime.Now.ToString("dd/MM/yyyy")" maxlength="10" />
+                        </div>
+
+                        <div class="col-12 form-group">
+                            <label class="control-label">Negociação:</label>
+                            <textarea id="Descricao" class="form-control" name="Descricao" maxlength="1000" rows="6">@(ViewBag.HistoricoAtual != null ? ViewBag.HistoricoAtual.Descricao : "")</textarea>
+                        </div>
+
+                        <div class="col-6 form-group">
+                            <label class="control-label">Realizar próximo contato:</label>
+                            <input type="date" class="form-control" autocomplete="off" value="@(ViewBag.HistoricoAtual != null ? ViewBag.HistoricoAtual.DataAgendaFormatadaYMD : "")" name="DataAgenda"
+                                   maxlength="10" />
+                        </div>
+
+                        <div class="col-6 form-group">
+                            <label class="control-label">Data da Compra:</label>
+                            <input type="date" class="form-control " autocomplete="off" id="DataCompra" name="DataCompra" value="@(ViewBag.HistoricoAtual != null ? ViewBag.HistoricoAtual.DataCompraFormatadaYMD : "")"
+                                   maxlength="10" />
+                        </div>
+
+                    </div>
+
+                    <div class="form-group text-right">
+                        <div class="col-12 ">
+                            <a class="btn btn-primary text-white" data-url="@Url.Action("Salvar", "Tarefas")" onclick="tarefas.SalvarHistorico(this)">Salvar</a>
+                        </div>
+                    </div>
+
+                </form>
+
+                <h5 class="font-weight-bold text-uppercase">Histórico</h5>
+                <hr />
+                <br />
+                <div style="height: 200px; overflow-y: scroll;">
+                    @Html.Partial("~/Views/Shared/_HistoricoAgendamento.cshtml", (List<GEPV.Domain.DTO.HistoricoDTO>)ViewBag.Historico)
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">    
+            <a class="btn btn-secondary text-white" onclick="tarefas.ReloadTarefas()" data-dismiss="modal">Fechar</a>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->

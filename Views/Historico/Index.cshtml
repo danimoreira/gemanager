@@ -1,0 +1,51 @@
+﻿@{
+    ViewBag.Title = "Histórico de Contatos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Histórico de Contatos</h2>
+    </div> 
+</div>
+
+<form class="border-dark" action="@Url.Action("Pesquisar", "Historico")">
+    <div class="form-horizontal">
+        <div class="form-group row">
+            <div class="col-md-10">
+                @Html.Label("Cliente", "Cliente:", new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.DropDownList("idCliente", (IEnumerable<SelectListItem>)ViewBag.clientes, new { @class = "form-control col-12" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                @Html.Label("", "", new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    <input type="submit" value="Ver Histórico" class="btn btn-success" />    
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div style="margin-top: 50px;">
+
+    @if (ViewBag.Historico != null)
+    {
+        if (ViewBag.Historico.Count == 0)
+        {
+            <h5 class="text-center text-muted">Nenhum histórico informado para o Filtro</h5>
+        }
+        else
+        {
+            @Html.Partial("~/Views/Shared/_Historico.cshtml", (List<GEPV.Domain.DTO.HistoricoDTO>)ViewBag.Historico)
+        }
+    }
+    else
+    {
+        <h5 class="text-center text-muted">Nenhum histórico informado para o Filtro</h5>
+    }
+</div>
+
+
+

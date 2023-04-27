@@ -1,0 +1,55 @@
+﻿@model GEPV.Domain.Entities.Mensagem
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal" style="min-width: 60vw">
+    <h3 class="display-5 text-primary">Mensagem</h3>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(model => model.Texto, htmlAttributes: new { @class = "control-label col-2" })
+        <div class="col-10">
+            @Html.TextAreaFor(model => model.Texto, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Texto, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.DataValidade, htmlAttributes: new { @class = "control-label col-2 date" })
+        <div class="col-4">
+                <input type="date" class="form-control" autocomplete="off" name="DataValidade"
+                   maxlength="10" />
+            @Html.ValidationMessageFor(model => model.DataValidade, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Tipo, htmlAttributes: new { @class = "control-label col-2" })
+        <div class="col-12">
+
+            @Html.DropDownListFor(x => x.Tipo, new List<SelectListItem>
+                {
+                              new SelectListItem { Text = "Crítico *Vermelho", Value="danger" },
+                              new SelectListItem { Text = "Alerta *Amarelo", Value="warning" },
+                              new SelectListItem { Text = "Informativo *Azul", Value="info" },
+                              new SelectListItem { Text = "Informativo *Verde", Value="success" }
+                }, new { @class = "form-control" })
+                
+                @Html.ValidationMessageFor(model => model.Tipo, "", new { @class = "text-danger" })
+            </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-10">
+            <input type="submit" value="Salvar" class="btn btn-success my-3" />
+            @Html.ActionLink("Voltar", "Index", new { }, new { @class = "btn btn-info" })
+        </div>
+    </div>
+</div>
+}

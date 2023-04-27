@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+
+
+    <div class="row">
+        <div class="col-12">
+            @if (ViewBag.MensagemPrincipal != null)
+            {
+                <div class="alert alert-@ViewBag.MensagemPrincipal.Tipo">
+                    Recado: @ViewBag.MensagemPrincipal.Texto
+                </div>
+            }
+
+            @if (ViewBag.Mensagens != null && ViewBag.Mensagens.Count > 0)
+            {
+
+                <div>
+
+                    <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#collapseMessages" aria-expanded="false" aria-controls="collapseMessages">
+                       <i class="fa fa-plus"></i> Ver mais recados
+                    </button>
+
+                </div>
+
+                 <div class="collapse" id="collapseMessages">
+                <div class="card card-body">
+                    <ul>
+                        @if (ViewBag.Mensagens != null)
+                        {
+                            foreach (var item in ViewBag.Mensagens)
+                            {
+                                <li>
+                                    <div class="alert alert-@item.Tipo">
+                                        Recado: @item.Texto
+                                    </div>
+                                </li>
+                            }
+                        }
+
+                    </ul>
+                </div>
+            </div>
+            }        
+   
+        </div>
+    </div>
+
+    @Html.Partial("~/Views/Tarefas/ReloadTarefas.cshtml")
+</div>

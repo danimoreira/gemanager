@@ -1,0 +1,64 @@
+﻿@model IEnumerable<GEPV.Domain.Entities.Cliente>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<input type="hidden" id="urlReloadTarefas" value="@Url.Action("ReloadTarefas", "Tarefas")" />
+<input type="hidden" id="urlRecuperarDetalhes" value="@Url.Action("RecuperarDetalhes", "Tarefas")" />
+
+<input type="hidden" name="idClienteSelecionado" id="idClienteSelecionado" value="@ViewBag.ClienteSelecionado" />
+
+<p>
+    @Html.ActionLink("Incluir Cliente", "Create", new { }, new { @class = "btn btn-success my-3" })
+</p>
+
+<table class="table table-hover" id="dt">
+    
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.RazaoSocial)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdVendedor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cidade)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Regiao.Descricao)
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RazaoSocial)
+            </td>
+            <th>
+                @Html.DisplayFor(modelItem => item.Vendedor.Nome)
+            </th>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cidade)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Regiao.Descricao)
+            </td>
+            <td>
+                <div class="btn-group">
+                    @Html.ActionLink("Alterar", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btn-sm" })
+                    @if (ViewBag.EhAdmin)
+                        @Html.ActionLink("Excluir", "Delete", new { id = item.Id }, new { @class = "btn btn-danger btn-sm" })                    
+                </div>
+            </td>
+        </tr>
+}
+    </tbody>            
+
+</table>

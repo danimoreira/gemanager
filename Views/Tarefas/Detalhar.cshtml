@@ -1,0 +1,35 @@
+﻿<div class="row">
+    <div class="col-12">
+        @foreach (var fornecedor in ViewBag.Fornecedores)
+        {
+            <div class="card-body border-bottom border-dark @fornecedor.CorFornecedorCliente @(fornecedor.CorFornecedorCliente == "bg-light" ? "" : "text-white")">
+                <div class="row">
+                    <div class="col-md-2">
+                        <h4 class="text-uppercase">@fornecedor.Nome</h4>
+                    </div>
+                    <div class="col-md-2">
+                        <h6>Último Contato:</h6>
+                        <p>@(fornecedor.UltimoContato == null ? "(Não Realizado)" : fornecedor.UltimoContato.ToString("dd/MM/yyyy"))</p>
+                    </div>
+                    <div class="col-md-2">
+                        <h6>Última Compra:</h6>
+                        <p>@(fornecedor.UltimaCompra == null ? "(Não Realizado)" : fornecedor.UltimaCompra.ToString("dd/MM/yyyy"))</p>
+                    </div>
+                    <div class="col-md-2">
+                        <h6>Próximo Contato:</h6>
+                        <p>@(fornecedor.ProximoContato == null ? "(Não Realizado)" : fornecedor.ProximoContato.ToString("dd/MM/yyyy"))</p>
+                    </div>
+                    <div class="col-md-2">
+                        <p class="text-uppercase">@fornecedor.Situacao</p>
+                    </div>
+                    <div class="col-md-2 text-right">
+                        <button class="btn btn-dark details" value="Realizar Contato" data-idCliente="@fornecedor.IdCliente" data-idFornecedor="@fornecedor.IdFornecedor" data-urlRealizarTarefas="@Url.Action("RealizarTarefas", "Tarefas", new { idCliente = fornecedor.IdCliente, idFornecedor = fornecedor.IdFornecedor })" onclick="tarefas.RealizarTarefas(this)">
+                            <i class="fa fa-phone"></i> Agendamento
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>

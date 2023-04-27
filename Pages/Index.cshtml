@@ -1,0 +1,17 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="d-flex justify-content-center align-items-center" id="home-index">
+    <div class="text-center">
+        <h1 class="display-4">GE Representações</h1>
+        <p><small>Todos os direitos reservados.</small></p>
+        <a href="/login" class="btn btn-secondary btn-lg">Fazer Login</a>
+    </div>
+</div>
+ <div class="fixed-bottom d-fixed w-100 text-center">Produzido por <a href="https://www.linkedin.com/in/danielmoreiradeveloper/" target="_blank">DM Soluções Tecnológicas Ltda</a></div>
+
+
+@await Html.PartialAsync("~/Views/js-css-public.cshtml")

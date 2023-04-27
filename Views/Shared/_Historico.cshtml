@@ -1,0 +1,26 @@
+﻿@foreach (var historico in Model)
+{
+    <div class="ml-3">
+        <div class="row">
+            <div class="col-md-4">
+                <span class="font-weight-bold">Data do Contato: </span> <span>@(historico.DataContato == null ? "(Não Realizado)" : historico.DataContato.ToString("dd/MM/yyyy"))</span>
+            </div>
+            <div class="col-md-8">
+                <span class="font-weight-bold">Contato feito por: </span> <span class="text-uppercase">@historico.NomeVendedor</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-11">
+                <span class="font-weight-bold">Fornecedor: </span> <span class="text-uppercase">@historico.NomeFornecedor</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-11">
+                <span class="font-weight-bold">Negociação</span>
+                <span>@historico.Negociacao</span>
+            </div>
+        </div>
+    </div>
+    
+    <hr class="border-dark" />
+}

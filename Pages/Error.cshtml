@@ -1,0 +1,23 @@
+﻿@page
+@model ErrorModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<h1 class="text-danger">Erro.</h1>
+
+@if (Model.ShowRequestId)
+{
+    <p>
+        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+    </p>
+}
+
+<h3>Algo deu errado</h3>
+<p>
+    Reinicie a aplicação. <a href="/login">Tente refazer login.</a>.
+</p>
+<p>
+    Caso problema persista, reporte um print e instruções sobre o erro para https://matteus.dev
+</p>
+

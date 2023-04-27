@@ -1,0 +1,67 @@
+﻿@model GEPV.Domain.Entities.Cliente
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Upload", "Cliente", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal container">
+    <h3 class="display-5 text-primary">Importar Clientes em Lote</h3>
+    <div class="alert alert-info">
+
+        <ul>
+            <li>
+                Confira as seguintes colunas na planilha:
+                <code>
+                    RAZAO_SOCIAL;NOME_FANTASIA;CNPJ;INSCRICAO_ESTADUAL;TELEFONE_PRINCIPAL;TELEFONE_CONTATO;
+                    EMAIL_PRINCIPAL;EMAIL_NFE;OBSERVACAO;LOGRADOURO;NUMERO;BAIRRO;CEP;CIDADE;UF_ESTADO;REGIAO;NOME_COMPRADOR;NOME_VENDEDOR;POTENCIAL
+                </code>
+            </li>
+        </ul>
+    </div>
+    <hr />
+
+
+
+    @if (@ViewBag.ImportCount == null)
+    {
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <label>Selecione o arquivo .csv</label>
+            <div class="col-md-10">
+                <input type="file" name="upload" />
+                @Html.ValidationMessageFor(model => model.RazaoSocial, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Salvar" class="btn btn-success my-3" />
+                @Html.ActionLink("Voltar", "Index", new { }, new { @class = "btn btn-info" })
+            </div>
+        </div>
+
+    }
+
+    @if (@ViewBag.ImportCount > 0)
+    {
+        <div class="alert alert-success">
+            <strong>SUCESSO</strong><br />
+            <span class="badge badge-primary">@ViewBag.ImportCount</span> Linha(s) importada(s)
+        </div>
+    }
+
+    @if (ViewBag.ListaInvalida != null)
+    {
+        <div class="alert alert-warning">
+            <strong>ATENÇÃO</strong><br />
+            @ViewBag.ListaInvalida
+        </div>
+    }
+
+</div>
+}

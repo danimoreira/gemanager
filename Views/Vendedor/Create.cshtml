@@ -1,0 +1,91 @@
+﻿@model GEPV.Domain.Entities.Vendedor
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h3 class="display-5 text-primary">Vendedor</h3>
+    <hr />
+
+    <div class="form-group row">        
+        <div class="col-md-12">
+            @Html.LabelFor(model => model.Nome, htmlAttributes: new { @class = "control-label col-md-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.Nome, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Nome, "", new { @class = "text-danger" })
+            </div>
+        </div>              
+    </div>
+
+    <div class="form-group row">        
+        <div class="col-md-6">
+            @Html.LabelFor(model => model.DataNascimento, htmlAttributes: new { @class = "control-label col-12 date" })
+            <div class="col-md-12">
+                <input type="date" class="form-control" autocomplete="off" name="DataNascimento"
+                   maxlength="10" />
+                @Html.ValidationMessageFor(model => model.DataNascimento, "", new { @class = "text-danger" })
+            </div>
+        </div> 
+        <div class="col-md-6">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>                   
+    </div>
+
+    <div class="form-group row">        
+        <div class="col-md-6">
+            @Html.LabelFor(model => model.Usuario, htmlAttributes: new { @class = "control-label col-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.Usuario, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Usuario, "", new { @class = "text-danger" })
+            </div>
+        </div> 
+        <div class="col-md-6">
+            @Html.LabelFor(model => model.Admin, htmlAttributes: new { @class = "control-label col-12" })
+            <div class="col-md-12">
+                @Html.DropDownListFor(x => x.Admin, new List<SelectListItem>
+            {
+            new SelectListItem { Text = "Vendedor", Value="0" },
+            new SelectListItem { Text = "Administrador", Value="1" }
+            }, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Admin, "", new { @class = "text-danger" })
+            </div>
+        </div>                   
+    </div>
+
+    <div class="form-group row">        
+        <div class="col-md-6">
+            @Html.LabelFor(model => model.Senha, htmlAttributes: new { @class = "control-label col-2" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.Senha, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Senha, "", new { @class = "text-danger" })
+            </div>
+        </div> 
+        <div class="col-md-6">
+            @Html.LabelFor(model => model.ConfirmarSenha, htmlAttributes: new { @class = "control-label col-12" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.ConfirmarSenha, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ConfirmarSenha, "", new { @class = "text-danger" })
+            </div>
+        </div>                   
+    </div>
+    
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-10">
+            <input type="submit" value="Salvar" class="btn btn-success my-3" />
+            @Html.ActionLink("Voltar", "Index", new { }, new { @class = "btn btn-info" })
+        </div>
+    </div>
+</div>
+}

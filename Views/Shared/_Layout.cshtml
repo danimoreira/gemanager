@@ -1,0 +1,130 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="@Url.Content("~/Content/img/favicon.png")" />
+
+    <title>GE Representações Ltda.</title>
+
+    @await Html.PartialAsync("~/Views/js-css.cshtml")
+
+</head>
+@{
+    var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
+}
+<body class="@controllerName">
+    <div class="container-fluid">
+        <div class="row">
+            <aside class="col-md-3 col-lg-2 nav-side-menu">
+                <div class="brand">
+                    <img src="~/Content/img/logo.png" alt="GE Representações Ltda." />
+                    <div>Agenda de Clientes</div>
+                </div>
+                <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
+
+                <div class="menu-list">
+                    <form class="form-inline col-md-12" action="@Url.Action("PesquisarClientes", "Tarefas")">
+                        <div class="input-group">
+                            <input class="form-control col-md-10" type="text" name="termo" placeholder="Digite a Razão Social ou Região" value="@ViewBag.termo" aria-label="Search">
+                            <button class="btn btn-outline-success col-md-2" id="btn-busca-cliente" type="submit"><i class="fa fa-search"></i></button>
+                        </div>
+                    </form>
+
+                    <div id="menu-content" class="menu-content collapse out">
+                        <ul>
+                            <li class="nav-item">
+                                @Html.ActionLink("Tarefas", "Index", "Tarefas", new { }, new { @class = "nav-link" })
+                            </li>
+
+                            <li class="nav-item">
+                                @Html.ActionLink("Clientes", "Index", "Cliente", new { }, new { @class = "nav-link" })
+                            </li>
+                            
+                            <li class="nav-item">
+                                @Html.ActionLink("Histórico de Contato", "Index", "Historico", new { }, new { @class = "nav-link" })
+                            </li>
+
+                            @* <li class="nav-item">
+                                @Html.ActionLink("Mapa de clientes", "MapaTodos", "Cliente", new { }, new { @class = "nav-link" })
+                            </li> *@
+
+                             @if (HttpContextAccessor.HttpContext.Request.Cookies["tokenUsuario"]?.ToString() == "A") {
+
+                            <li data-toggle="collapse" data-target="#admin-menu" class="collapsed active">
+                                    <a href="#"><i class="fa fa-cog fa-lg mr-2"></i> Administrador <i class="fa fa-angle-down fa-xs mr-2 ml-auto"></i></a>
+                                <ul class="sub-menu collapse" id="admin-menu">
+                                    <li class="nav-item">
+                                        @Html.ActionLink("Vendedores", "Index", "Vendedor", new { }, new { @class = "nav-link" })
+                                    </li>
+
+                                    <li class="nav-item">
+                                        @Html.ActionLink("Fornecedor", "Index", "Fornecedor", new { }, new { @class = "nav-link" })
+                                    </li>                                    
+
+                                    <li class="nav-item">
+                                        @Html.ActionLink("Estado", "Index", "Estado", new { }, new { @class = "nav-link" })
+                                    </li>
+
+                                    <li class="nav-item">
+                                        @Html.ActionLink("Região", "Index", "Regiao", new { }, new { @class = "nav-link" })
+                                    </li>
+
+                                    <li class="nav-item">
+                                        @Html.ActionLink("Feriados", "Index", "Feriado", new { }, new { @class = "nav-link" })
+                                    </li>
+                                    
+                                    <li class="nav-item">
+                                        @Html.ActionLink("Mensagens", "Index", "Mensagem", new { }, new { @class = "nav-link" })
+                                    </li>
+                                    
+                                </ul>
+
+                            </li>
+
+                            }
+
+                        </ul>
+                        <div class="ml-1">
+                            <div id="box-login-info">
+                            <span>@HttpContextAccessor.HttpContext.Request.Cookies["dataAtual"]?.ToString()</span><br />
+                            <span><i class="fa fa-user mr-2"></i>@HttpContextAccessor.HttpContext.Request.Cookies["displayName"]?.ToString()</span>
+                                <span>|</span>
+                                @Html.ActionLink("Sair", "LogOut", "Login", new { }, new { @class = "text-warning" })
+                            </div>
+                        </div> 
+                     
+                    </div>
+
+                </div>
+
+            </aside>
+
+            <main class="col-md-9 col-lg-10" id="@controllerName">
+
+                <div class="text-white" id="loadingDiv">
+                    <i class="fa fa-spinner fa-spin fa-5x" id="loading-spin"></i>
+                    <br />
+                    <span>Aguarde...</span>
+                </div>
+
+                @RenderBody()
+
+
+            </main>
+        </div>
+    </div>
+
+    @if (Url.Action().Contains("/regiao/edit") || Url.Action().Contains("/regiao/create"))
+    {
+        <script src="~/Scripts/openlayers/ol.js"></script>
+        <script src="~/Scripts/openlayers/regiao.js"></script>
+    }
+
+    <script src="~/Scripts/DataTables/datatables.min.js" charset="utf-8"></script>
+</body>
+</html>
