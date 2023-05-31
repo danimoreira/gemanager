@@ -28,6 +28,7 @@ namespace GEPV.Domain.DTO
         public string UfEstado { get; set; }
         public string Email { get; set; }
         public int? IdVendedor { get; set; }
+        public string Observacao { get; set; }
 
         public List<FeriadoCliente> Feriados { get; set; }
     }

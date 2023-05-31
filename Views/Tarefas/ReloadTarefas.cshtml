@@ -78,11 +78,9 @@
                                                         <div class="col-4 col-md-3">
                                                             <h6>Próximo Contato: @(cliente.ProximoContato == null ? "(Não Realizado)" : cliente.ProximoContato.ToString("dd/MM/yyyy"))</h6>
                                                         </div>
-                                                        @if (cliente.PotencialNome != null) { 
-                                                            <div class="col-4 col-md-3">
-                                                                <span class="badge badge-warning badge-potencial">PT: @cliente.PotencialNome</span>
-                                                            </div>
-                                                        }
+                                                        <div class="col-4 col-md-3">
+                                                            <span class="badge badge-warning badge-potencial">@cliente.Observacao</span>
+                                                        </div>
                                                     </div>
                                                     <div class="row text-left">
                                                         <div class="col-4 col-md-3">
