@@ -32,88 +32,89 @@
             </ul>       
         </div>
     </div>
-
-    <div class="col-md-12">
-        <div class="tab-content">            
-            @foreach (var vendedor in ViewBag.Vendedores)
-            {
-                <div class="tab-pane fade in @(vendedor.IdVendedor == ViewBag.IdVendedorLogado ? "active show" : "")" id="vendedor@(vendedor.IdVendedor)" role="tabpanel">
-                    @foreach (var cliente in ViewBag.Clientes)
-                    {
-                        if (cliente.IdVendedor == vendedor.IdVendedor)
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tab-content">            
+                @foreach (var vendedor in ViewBag.Vendedores)
+                {
+                    <div class="tab-pane fade in @(vendedor.IdVendedor == ViewBag.IdVendedorLogado ? "active show" : "")" id="vendedor@(vendedor.IdVendedor)" role="tabpanel">
+                        @foreach (var cliente in ViewBag.Clientes)
                         {
-                            <div id="accordion@(cliente.IdCliente)" class="accordion-reload-tarefas">
-                                <div class="card">
-                                    <div class="card-header @cliente.CorCliente @(cliente.CorCliente == "bg-light" ? "" : "text-white")" id="cliente@(cliente.IdCliente)">
-                                        <button class="col-12 btn @cliente.CorCliente @(cliente.CorCliente == "bg-light" ? "" : "text-white")" data-toggle="collapse" id="clickGroupCliente@(cliente.IdCliente)" data-idCliente="@(cliente.IdCliente)" onclick="tarefas.SelecionarCliente(@(cliente.IdCliente)); tarefas.DetalharCliente(this)" data-target="#groupCliente@(cliente.IdCliente)" data-url="@Url.Action("Detalhar", "Tarefas", new { idcliente = cliente.IdCliente })">
-                                            <div class="row">
-                                                <div class="col-md-4 align-self-center">
-                                                    <h3 class="text-xl-left text-uppercase">@cliente.Nome</h3>
-                                                        <div class="col-md-12 text-left">
-                                                            <p class="badge badge-warning text-left">@cliente.Cidade</p>
-                                                            @if (cliente.Cidade != cliente.RegiaoDescricao)
-                                                            {
-                                                                <span class="d-inline-block"></span><p class="badge badge-info text-left">@cliente.RegiaoDescricao</p>
-                                                            }
-                                                         </div>  
-                                                        @if (cliente.Feriados != null)
-                                                        {
+                            if (cliente.IdVendedor == vendedor.IdVendedor)
+                            {
+                                <div id="accordion@(cliente.IdCliente)" class="accordion-reload-tarefas">
+                                    <div class="card">
+                                        <div class="card-header @cliente.CorCliente @(cliente.CorCliente == "bg-light" ? "" : "text-white")" id="cliente@(cliente.IdCliente)">
+                                            <button class="col-12 btn @cliente.CorCliente @(cliente.CorCliente == "bg-light" ? "" : "text-white")" data-toggle="collapse" id="clickGroupCliente@(cliente.IdCliente)" data-idCliente="@(cliente.IdCliente)" onclick="tarefas.SelecionarCliente(@(cliente.IdCliente)); tarefas.DetalharCliente(this)" data-target="#groupCliente@(cliente.IdCliente)" data-url="@Url.Action("Detalhar", "Tarefas", new { idcliente = cliente.IdCliente })">
+                                                <div class="row">
+                                                    <div class="col-md-4 align-self-center">
+                                                        <h3 class="text-xl-left text-uppercase">@cliente.Nome</h3>
                                                             <div class="col-md-12 text-left">
-                                                                @foreach (var f in cliente.Feriados)
+                                                                <p class="badge badge-warning text-left">@cliente.Cidade</p>
+                                                                @if (cliente.Cidade != cliente.RegiaoDescricao)
                                                                 {
-                                                                    <span class="badge badge-success">@f.Nome</span>
+                                                                    <span class="d-inline-block"></span><p class="badge badge-info text-left">@cliente.RegiaoDescricao</p>
                                                                 }
-                                                            </div>                                                            
-                                                        }
+                                                            </div>  
+                                                            @if (cliente.Feriados != null)
+                                                            {
+                                                                <div class="col-md-12 text-left">
+                                                                    @foreach (var f in cliente.Feriados)
+                                                                    {
+                                                                        <span class="badge badge-success">@f.Nome</span>
+                                                                    }
+                                                                </div>                                                            
+                                                            }
 
+                                                        </div>
+                                                    <div class="col-md-8">
+                                                        <div class="row text-left text-uppercase">
+                                                            <div class="col-4 col-md-3">
+                                                                <h6>Último Contato: @(cliente.UltimoContato == null ? "(Não Realizado)" : cliente.UltimoContato.ToString("dd/MM/yyyy"))</h6>
+                                                            </div>
+                                                            <div class="col-4 col-md-3">
+                                                                <h6>Última Compra: @(cliente.UltimaCompra == null ? "(Não Realizado)" : cliente.UltimaCompra.ToString("dd/MM/yyyy"))</h6>
+                                                            </div>
+                                                            <div class="col-4 col-md-3">
+                                                                <h6>Próximo Contato: @(cliente.ProximoContato == null ? "(Não Realizado)" : cliente.ProximoContato.ToString("dd/MM/yyyy"))</h6>
+                                                            </div>
+                                                            <div class="col-4 col-md-3">
+                                                                <span class="badge badge-warning badge-potencial">@cliente.Observacao</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row text-left">
+                                                            <div class="col-4 col-md-3">
+                                                                <span><i class="fa fa-mobile-phone fa-lg"></i> @cliente.Contato</span>
+                                                            </div>
+                                                            <div class="col-4 col-md-3">
+                                                                <span><i class="fa fa-users fa-lg"></i> @cliente.Responsavel</span>
+                                                            </div>
+                                                            <div class="col-4 col-md-3">
+                                                                <span><i class="fa fa-envelope fa-lg"></i> @cliente.Email</span>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                <div class="col-md-8">
-                                                    <div class="row text-left text-uppercase">
-                                                        <div class="col-4 col-md-3">
-                                                            <h6>Último Contato: @(cliente.UltimoContato == null ? "(Não Realizado)" : cliente.UltimoContato.ToString("dd/MM/yyyy"))</h6>
-                                                        </div>
-                                                        <div class="col-4 col-md-3">
-                                                            <h6>Última Compra: @(cliente.UltimaCompra == null ? "(Não Realizado)" : cliente.UltimaCompra.ToString("dd/MM/yyyy"))</h6>
-                                                        </div>
-                                                        <div class="col-4 col-md-3">
-                                                            <h6>Próximo Contato: @(cliente.ProximoContato == null ? "(Não Realizado)" : cliente.ProximoContato.ToString("dd/MM/yyyy"))</h6>
-                                                        </div>
-                                                        <div class="col-4 col-md-3">
-                                                            <span class="badge badge-warning badge-potencial">@cliente.Observacao</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row text-left">
-                                                        <div class="col-4 col-md-3">
-                                                            <span><i class="fa fa-mobile-phone fa-lg"></i> @cliente.Contato</span>
-                                                        </div>
-                                                        <div class="col-4 col-md-3">
-                                                            <span><i class="fa fa-users fa-lg"></i> @cliente.Responsavel</span>
-                                                        </div>
-                                                        <div class="col-4 col-md-3">
-                                                            <span><i class="fa fa-envelope fa-lg"></i> @cliente.Email</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-4">
-                                                    @if (cliente.Fornecedores != null)
-                                                    {
-                                                        foreach (var empresas in cliente.Fornecedores)
+                                                    <div class="col-4">
+                                                        @if (cliente.Fornecedores != null)
                                                         {
-                                                            <span class="badge badge-warning">@empresas.Sigla</span>
+                                                            foreach (var empresas in cliente.Fornecedores)
+                                                            {
+                                                                <span class="badge badge-warning">@empresas.Sigla</span>
+                                                            }
                                                         }
-                                                    }
-                                                    </div>
-                                            </div>
-                                        </button>
-                                    </div>
-                                    <div id="groupCliente@(cliente.IdCliente)" class="collapse collapse-content container-fluid" aria-labelledby="groupCliente@(cliente.IdCliente)" data-parent="#accordion@(cliente.IdCliente)">
+                                                        </div>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div id="groupCliente@(cliente.IdCliente)" class="collapse collapse-content container-fluid" aria-labelledby="groupCliente@(cliente.IdCliente)" data-parent="#accordion@(cliente.IdCliente)">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            }
                         }
-                    }
-                </div>
-            }
+                    </div>
+                }
+            </div>
         </div>
     </div>
     <div class="modal" id="modal" data-backdrop="static" data-keyboard="false">

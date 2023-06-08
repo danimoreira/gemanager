@@ -67,7 +67,8 @@ namespace GEPV.Domain.SQL
                                 NULL as QtdeCliente,
 	                            ID IdVendedor,
                                 NOME NomeVendedor
-                            from VENDEDOR";
+                            from VENDEDOR
+                            ORDER BY NOME";
 
             return db.TarefasVendedores.FromSqlRaw(SQl).ToList();
         }
@@ -100,17 +101,20 @@ SELECT DISTINCT
 		CLIENTE.Id IdCliente, 
         CLIENTE.CIDADE, 
 		ESTADO.SIGLA UfEstado,
-		COALESCE(CASE WHEN MIN(FPC.COD_CORCLIENTE) = 0 THEN 'bg-danger'			 
-             WHEN MIN(FPC.COD_CORCLIENTE) = 1 THEN 'bg-info'
-             WHEN MIN(FPC.COD_CORCLIENTE) = 2 THEN 'bg-light'
-             WHEN MIN(FPC.COD_CORCLIENTE) = 3 THEN 'bg-success' END, 'bg-light')
+		COALESCE(CASE 			 
+			 WHEN MIN(FPC.COD_CORCLIENTE) = 0 AND MAX(FPC.CONTATODIA) = 0 THEN 'bg-danger'
+             WHEN MAX(FPC.CONTATODIA) > 0 THEN 'bg-success'
+             WHEN MIN(FPC.COD_CORCLIENTE) = 1 AND MAX(FPC.CONTATODIA) = 0 THEN 'bg-info'
+             WHEN MIN(FPC.COD_CORCLIENTE) = 2 AND MAX(FPC.CONTATODIA) = 0 THEN 'bg-light'
+             WHEN MIN(FPC.COD_CORCLIENTE) = 3 AND MAX(FPC.CONTATODIA) = 0 THEN 'bg-success' END, 'bg-info')
         CorCliente,	
+        MAX(FPC.CONTATODIA),
         MIN(COALESCE(FPC.COD_CORCLIENTE, 2)),
 		CLIENTE.RAZAO_SOCIAL Nome,
 		REGIAO.DESCRICAO RegiaoDescricao,
 		MAX(FPC.UltimoContato) UltimoContato,
 		MAX(FPC.UltimaCompra) UltimaCompra,
-		MIN(FPC.ProximoContato) ProximoContato,
+		CASE WHEN MAX(FPC.CONTATODIA) > 0 THEN DATE(NOW()) ELSE MIN(FPC.ProximoContato) END ProximoContato,
 		CLIENTE.TELEFONE_PRINCIPAL Contato,
 		CLIENTE.NOME_COMPRADOR Responsavel,
 		CLIENTE.EMAIL_PRINCIPAL Email,
@@ -123,8 +127,14 @@ LEFT JOIN REGIAO ON REGIAO.ID = CLIENTE.ID_REGIAO
 LEFT JOIN ESTADO ON ESTADO.ID = CLIENTE.ID_ESTADO
 WHERE CLIENTE.SITUACAO = 'A'
 AND CLIENTE.ID_MATRIZ IS NULL
-AND 0 < (SELECT COUNT(1) FROM VENDEDOR
-WHERE VENDEDOR.ID = {0} AND ((VENDEDOR.ADMIN = 0 AND VENDEDOR.ID = CLIENTE.ID_VENDEDOR) OR (VENDEDOR.ADMIN = 1)))
+AND  0 < (SELECT COUNT(1) FROM VENDEDOR 
+WHERE VENDEDOR.ID = {0} AND (
+	VENDEDOR.ADMIN = 1 OR 
+		(VENDEDOR.ADMIN = 0 AND 0 < (SELECT COUNT(1) FROM VENDEDOR VEND 
+										WHERE VEND.ID = CLIENTE.ID_VENDEDOR
+                                        AND VEND.ADMIN = 0
+        ))
+))
 GROUP BY CLIENTE.Id,
 		 CLIENTE.RAZAO_SOCIAL,
 		 REGIAO.DESCRICAO,
@@ -133,8 +143,8 @@ GROUP BY CLIENTE.Id,
 		 CLIENTE.NOME_COMPRADOR,
 		 CLIENTE.EMAIL_PRINCIPAL,
          CLIENTE.OBSERVACAO
-ORDER BY MIN(COALESCE(FPC.COD_CORCLIENTE, 2)),
-		 MIN(FPC.ProximoContato),
+ORDER BY MAX(FPC.CONTATODIA) DESC,
+	     MIN(COALESCE(FPC.COD_CORCLIENTE, 2)),
          CLIENTE.RAZAO_SOCIAL", idVendedor);
 
             try

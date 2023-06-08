@@ -30,6 +30,7 @@ namespace GEPV.Domain.Entities
 
         [Column("EMAIL")]
         [Display(Name = "Email")]
+        [Required(ErrorMessage = "É obrigatório preencher o Email!")]
         public string Email { get; set; }
 
         [Column("USUARIO")]

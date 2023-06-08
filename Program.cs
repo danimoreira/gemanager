@@ -44,7 +44,7 @@ app.UseStaticFiles(new StaticFileOptions
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    app.UseHttpsRedirection();
+    // app.UseHttpsRedirection();
 }
 
 app.UseStaticFiles();

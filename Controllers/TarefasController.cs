@@ -126,7 +126,7 @@ namespace GEPosVendas.Controllers
                 item.PotencialNome = listaPotencial.Find(x => x.Value == item.Potencial.ToString())?.Text;
             }            
             
-            ViewBag.Vendedores = vendedores;
+            ViewBag.Vendedores = vendedores.Where(x => x.QtdeCliente > 0).ToList();
             ViewBag.Clientes = clientes;
 
             if (HttpContext.Request.Cookies["displayName"] == null)

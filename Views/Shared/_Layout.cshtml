@@ -28,10 +28,10 @@
                 <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
 
                 <div class="menu-list">
-                    <form class="form-inline col-md-12" action="@Url.Action("PesquisarClientes", "Tarefas")">
+                    <form class="form-inline" action="@Url.Action("PesquisarClientes", "Tarefas")">
                         <div class="input-group">
                             <input class="form-control col-md-10" type="text" name="termo" placeholder="Digite a Razão Social ou Região" value="@ViewBag.termo" aria-label="Search">
-                            <button class="btn btn-outline-success col-md-2" id="btn-busca-cliente" type="submit"><i class="fa fa-search"></i></button>
+                            <button class="btn btn-outline-success col-md-2" id="btn-busca-cliente" type="submit"><i class="fa fa-search" style="margin-left: -6px"></i></button>
                         </div>
                     </form>
 
@@ -56,7 +56,7 @@
                              @if (HttpContextAccessor.HttpContext.Request.Cookies["tokenUsuario"]?.ToString() == "A") {
 
                             <li data-toggle="collapse" data-target="#admin-menu" class="collapsed active">
-                                    <a href="#"><i class="fa fa-cog fa-lg mr-2"></i> Administrador <i class="fa fa-angle-down fa-xs mr-2 ml-auto"></i></a>
+                                    <a href="#"><i class="fa fa-cog fa-lg mr-2"></i> Administrador </a>
                                 <ul class="sub-menu collapse" id="admin-menu">
                                     <li class="nav-item">
                                         @Html.ActionLink("Vendedores", "Index", "Vendedor", new { }, new { @class = "nav-link" })
