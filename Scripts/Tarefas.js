@@ -107,6 +107,8 @@ var Tarefas = function () {
     }
 
     this.SalvarHistorico = function (obj) {
+        
+
         var isValid = true;
 
         if ($("[name=DataContato]").val() == "") {
@@ -128,6 +130,8 @@ var Tarefas = function () {
             toastr.warning("Favor preencher os campos obrigatórios.");
             return false;
         }
+
+        setLoading(true);
 
         var urlDetalhe = $(obj).attr("data-url");
         var panelBody = $("#modal");
@@ -168,14 +172,12 @@ var Tarefas = function () {
                         tarefas.ReloadTarefas();
                     }
                 });
-                tarefas.inicializaDatePicker();
+                tarefas.inicializaDatePicker();                
             },
             error: function (error) {
                 toastr.error('error; ' + eval(error));
             }
         });
-
-        
     }
 
     this.AlterarFornecedor = function (obj) {
@@ -199,6 +201,8 @@ var Tarefas = function () {
     }
 
     this.ReloadTarefas = function () {
+        setLoading(true);
+
         $("#modal").modal('hide');
 
         var idClienteSelecionado = $("[name=idClienteSelecionado]").val();
@@ -222,14 +226,10 @@ var Tarefas = function () {
                 $("#modal").modal('hide');
                 $("main").html(resultView);
 
-                
-
                 if (idVendedorSelecionado != 0)
                     $("#groupVendedor" + idVendedorSelecionado).trigger("click");
 
                 if (idClienteSelecionado != 0) {
-
-                    $('#loadingDiv').show();
 
                     $("#clickGroupCliente" + idClienteSelecionado).trigger("click");
 
@@ -238,16 +238,28 @@ var Tarefas = function () {
                     
                     tarefas.DetalharCliente($("div").find("[data-target='#groupCliente" + idClienteSelecionado + "']"));
 
-                    setTimeout(function () {
-                        $('#loadingDiv').hide();
-                    }, 1000);
+                    setLoading(false);
                 }
             },
             error: function (error) {
+                setLoading(false);
                 alert('error; ' + eval(error));
             }
         });
+    }
+}
 
+var setLoading = (power) => {
+    if (power)
+    {
+        if (!$('#loadingDiv').is(":visible"))
+            $('#loadingDiv').show();
+    }
+    else {
+        if ($('#loadingDiv').is(":visible"))
+        setTimeout(function () {
+            $('#loadingDiv').hide();
+        }, 1000);
     }
 }
 

@@ -73,7 +73,8 @@ namespace GEPV.Domain.SQL
             return db.TarefasVendedores.FromSqlRaw(SQl).ToList();
         }
 
-        public List<Cliente> GetAllClientesList(){
+        public List<Cliente> GetAllClientesList()
+        {
             try
             {
                 return db.Cliente
@@ -82,16 +83,18 @@ namespace GEPV.Domain.SQL
                 .Include(cliente => cliente.Vendedor)
                 .ToList();
 
-            }                    
-            catch (InvalidCastException ex) {
+            }
+            catch (InvalidCastException ex)
+            {
                 return new List<Cliente>();
             }
         }
 
-        public IEnumerable<Cliente> GetCnpjCliente(int idClienteMatriz){
-           return db.Cliente
-                    .Where(x => x.Id == idClienteMatriz || x.IdMatriz == idClienteMatriz)
-                    .ToList();
+        public IEnumerable<Cliente> GetCnpjCliente(int idClienteMatriz)
+        {
+            return db.Cliente
+                     .Where(x => x.Id == idClienteMatriz || x.IdMatriz == idClienteMatriz)
+                     .ToList();
         }
 
         public List<TarefasClientes> GetClientes(int idVendedor)
@@ -102,19 +105,20 @@ SELECT DISTINCT
         CLIENTE.CIDADE, 
 		ESTADO.SIGLA UfEstado,
 		COALESCE(CASE 			 
-			 WHEN MIN(FPC.COD_CORCLIENTE) = 0 AND MAX(FPC.CONTATODIA) = 0 THEN 'bg-danger'
+			 WHEN MIN(FPC.COD_CORCLIENTE) = 0 THEN 'bg-danger'
              WHEN MAX(FPC.CONTATODIA) > 0 THEN 'bg-success'
-             WHEN MIN(FPC.COD_CORCLIENTE) = 1 AND MAX(FPC.CONTATODIA) = 0 THEN 'bg-info'
-             WHEN MIN(FPC.COD_CORCLIENTE) = 2 AND MAX(FPC.CONTATODIA) = 0 THEN 'bg-light'
-             WHEN MIN(FPC.COD_CORCLIENTE) = 3 AND MAX(FPC.CONTATODIA) = 0 THEN 'bg-success' END, 'bg-info')
+             WHEN MIN(FPC.COD_CORCLIENTE) = 1 AND MAX(FPC.CONTATODIA) = 0 THEN 'bg-success'
+             WHEN MIN(FPC.COD_CORCLIENTE) = 2 AND MAX(FPC.CONTATODIA) = 0 THEN 'bg-info'
+             WHEN MIN(FPC.COD_CORCLIENTE) = 3 AND MAX(FPC.CONTATODIA) = 0 THEN 'bg-light' 
+             END, 'bg-light')
         CorCliente,	
         MAX(FPC.CONTATODIA),
-        MIN(COALESCE(FPC.COD_CORCLIENTE, 2)),
+        MIN(COALESCE(FPC.COD_CORCLIENTE, 3)),
 		CLIENTE.RAZAO_SOCIAL Nome,
 		REGIAO.DESCRICAO RegiaoDescricao,
 		MAX(FPC.UltimoContato) UltimoContato,
 		MAX(FPC.UltimaCompra) UltimaCompra,
-		CASE WHEN MAX(FPC.CONTATODIA) > 0 THEN DATE(NOW()) ELSE MIN(FPC.ProximoContato) END ProximoContato,
+		MIN(FPC.ProximoContato) ProximoContato,
 		CLIENTE.TELEFONE_PRINCIPAL Contato,
 		CLIENTE.NOME_COMPRADOR Responsavel,
 		CLIENTE.EMAIL_PRINCIPAL Email,
@@ -143,15 +147,15 @@ GROUP BY CLIENTE.Id,
 		 CLIENTE.NOME_COMPRADOR,
 		 CLIENTE.EMAIL_PRINCIPAL,
          CLIENTE.OBSERVACAO
-ORDER BY MAX(FPC.CONTATODIA) DESC,
-	     MIN(COALESCE(FPC.COD_CORCLIENTE, 2)),
+ORDER BY MIN(COALESCE(FPC.COD_CORCLIENTE, 3)),
          CLIENTE.RAZAO_SOCIAL", idVendedor);
 
             try
             {
                 return db.TarefasClientes.FromSqlRaw(SQL).ToList();
             }
-            catch (InvalidCastException ex) {
+            catch (InvalidCastException ex)
+            {
                 return new List<TarefasClientes>();
             }
         }
@@ -166,7 +170,7 @@ ORDER BY MAX(FPC.CONTATODIA) DESC,
                             INNER JOIN VENDEDOR VDD ON VDD.ID = C.ID_VENDEDOR AND VDD.ID = " + vendedorId
                           + " INNER JOIN ESTADO ON ESTADO.ID = C.ID_ESTADO"
                           + " INNER JOIN REGIAO ON REGIAO.ID = C.ID_REGIAO";
- 
+
 
             return db.ExportClientes.FromSqlRaw(SQL).ToList();
         }
@@ -183,24 +187,28 @@ FPC.SIGLA,
 FPC.ULTIMOCONTATO,
 FPC.ULTIMACOMPRA,
 FPC.PROXIMOCONTATO,
-FPC.SITUACAO
+FPC.SITUACAO,
+FPC.COD_CORCLIENTE, 
+CASE WHEN FPC.COD_CORCLIENTE = 2 THEN FPC.PROXIMOCONTATO ELSE NULL END ORD_CONTATOREALIZADO
 FROM VW_FORNECEDOR_POR_CLIENTE FPC
 WHERE (FPC.ID_CLIENTE = {0} OR FPC.ID_MATRIZ = {0})
 UNION ALL
 SELECT {0} IDCLIENTE,
-	'bg-info' CORFORNECEDORCLIENTE,                                    
+	'bg-light' CORFORNECEDORCLIENTE,                                    
 	FORNECEDOR.ID IDFORNECEDOR,
 	FORNECEDOR.NOME_FANTASIA NOME,
 	FORNECEDOR.SIGLA_FORNECEDOR SIGLA,
 	NULL ULTIMOCONTATO,
 	NULL ULTIMACOMPRA,
 	NULL PROXIMOCONTATO,
-	'NUNCA REALIZADO CONTATO' SITUACAO
+	'NUNCA REALIZADO CONTATO' SITUACAO,
+    3 COD_CORCLIENTE,
+    NULL ORD_CONTATOREALIZADO
     FROM FORNECEDOR
     WHERE 0 = (SELECT COUNT(1) FROM CONTATOS
 		INNER JOIN CLIENTE ON CLIENTE.ID = CONTATOS.ID_CLIENTE OR CLIENTE.ID_MATRIZ = CONTATOS.ID_CLIENTE
     WHERE CONTATOS.ID_FORNECEDOR = FORNECEDOR.ID AND (CLIENTE.ID = {0} OR CLIENTE.ID_MATRIZ = {0}))
-ORDER BY NOME", idCliente.Value.ToString());
+ORDER BY COD_CORCLIENTE, ORD_CONTATOREALIZADO, PROXIMOCONTATO DESC, NOME", idCliente.Value.ToString());
 
             return db.TarefasFornecedores.FromSqlRaw(SQL).ToList();
         }
@@ -229,18 +237,18 @@ ORDER BY NOME", idCliente.Value.ToString());
                             LEFT JOIN VENDEDOR ON CONTATOS.ID_VENDEDOR = VENDEDOR.ID
                             INNER JOIN FORNECEDOR ON CONTATOS.ID_FORNECEDOR = FORNECEDOR.ID ";
 
-            var SqlWhere =$@"WHERE 1 = 1 ";
+            var SqlWhere = $@"WHERE 1 = 1 ";
 
             if (idCliente != 0)
                 SqlWhere += $@"AND (CLIENTE.ID = {idCliente} OR CLIENTE.ID_MATRIZ = {idCliente})";
-            
+
             if (idVendedor != 0)
                 SqlWhere += $@"AND CONTATOS.ID_VENDEDOR = {idVendedor} ";
 
             if (idFornecedor != 0)
                 SqlWhere += $@"AND CONTATOS.ID_FORNECEDOR = {idFornecedor} ";
 
-            var SqlOrderBy= $@"ORDER BY DATA_CONTATO DESC";
+            var SqlOrderBy = $@"ORDER BY DATA_CONTATO DESC";
 
             var SqlFull = $@"{SqlSelect} {SqlWhere} {SqlOrderBy}";
 

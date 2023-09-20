@@ -104,17 +104,14 @@
 
             </aside>
 
+            <div class="text-white" id="loadingDiv">
+                <i class="fa fa-spinner fa-spin fa-5x" id="loading-spin"></i>
+                <br />
+                <span>Aguarde...</span>
+            </div>
+
             <main class="col-md-9 col-lg-10" id="@controllerName">
-
-                <div class="text-white" id="loadingDiv">
-                    <i class="fa fa-spinner fa-spin fa-5x" id="loading-spin"></i>
-                    <br />
-                    <span>Aguarde...</span>
-                </div>
-
                 @RenderBody()
-
-
             </main>
         </div>
     </div>
